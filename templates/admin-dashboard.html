@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Bootstrap CSS (using url_for to link to the static folder in Flask) -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- jQuery CDN (required for Bootstrap's JavaScript and AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/oryo_logo.png') }}" alt="Logo" class="logo">
+    </div>
+    <h1>Admin Dashboard</h1>
+        <!-- Logout Button -->
+        <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+        </form>
+        <!-- Display a flash message based on user's acrivity -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- buttons to manage customer and Add a new project  -->
+    <div>
+        <form action="{{ url_for('admin.manage_customer') }}">
+            <button type="submit">View Customers</button>
+        </form>
+                <!-- Add Customer Button -->
+        <button id="createProjectBtn" class="btn btn-primary mb-1" onclick="toggleForm('projectForm', true)">Add new Project</button>
+        <button id="createProductBtn" class="btn btn-primary mb-1" onclick="toggleForm('createProductForm')">Add new Product</button>
+    </div>
+    
+
+    <!-- Customer Form (Initially hidden) -->
+    <form id="projectForm" action="{{ url_for('admin.manage_project') }}" method="POST" style="display:none;">
+        <div class="form-group">
+            <label for="customer_id">Customer Name</label>
+            <select class="form-control" id="customer_id" name="customer_id" required>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="project_description">Project Description</label>
+            <input type="text" class="form-control" id="project_description" name="project_description" required>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-secondary" id="cancelFormBtn">Cancel</button>
+    </form>
+
+    <!-- Create product (initially hidden) -->
+    <form id="createProductForm" action="{{ url_for('admin.manage_product') }}" method="POST" style="display:none;">
+        <label for="product_name">Product Name</label>
+        <input type="text" class="form-control" id="product_name" name="product_name" required>
+    
+        <label for="product_description">Product Description</label>
+        <input type="text" class="form-control" id="product_description" name="product_description">
+    
+        <label for="product_fields">Product Fields (comma seperated)</label>
+        <textarea id="product_fields" class="form-control" placeholder='e.g. field1, field2, field3, field4...' name="product_fields" required></textarea>
+        
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-secondary" id="cancelFormBtn">Cancel</button>
+    </form>
+
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

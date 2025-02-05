@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>on-Site Technician Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <!-- Include jQuery (from CDN) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/oryo_logo.png') }}" alt="Logo" class="logo">
+    </div>
+    <h1>Technician Dashboard</h1>
+
+          <!-- Logout Button -->
+    <form action="/logout" method="POST">
+        <button type="submit">Logout</button>
+    </form>
+
+    <!-- Add Task Button -->
+    <!-- <form action="{{ url_for('support.addTask') }}">
+        <button type="submit" onclick="addTaskProductDisplay()">Add task</button>
+    </form> -->
+
+    <form">
+        <button type="submit" >Log an Issue</button>
+    </form>
+
+    <div id="message" class="mt-3 text-center"></div>
+
+        <!-- Display All Active Task for Tech Support -->
+        <h3 class="mt-5 text-center">Active Tasks</h3>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Device Imei</th>
+                    <th>Current Status</th>
+                    <th>Next Stage</th>
+                </tr>
+            </thead>
+            <tbody id="taskList">
+                {% for installation in installations %}
+                    <tr id="installation-{{ installation.installation_id }}">
+                        <td> {{ installation.product.product_description}} </td>
+                        <td>{{ installation.device_imei }}</td>
+                        <td>{{ installation.stage.stage_name}}</td>
+                        <td>
+                            <button class="btn btn-info support-edit-btn" 
+                                    data-id="{{ installation.installation_id}}"
+                                    data-product_id="{{ installation.product.product_id }}"
+                                    data-stage_id="{{ installation.stage.stage_id }}"
+                                    data-product="{{ installation.product.product_description }}"
+                                    data-deviceImei = "{{ installation.device_imei}}"
+                                    data-technician = "{{ installation.technician.f_name}} {{ installation.technician.l_name}}" >
+                                Start {{ installation.stage.stage_name}}
+                            </button>
+                        </td>
+                    </tr>
+    
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <!-- Modal Overlay for updating Task-->
+        <div class="modal fade" id="editTask" tabindex="-1" aria-labelledby="editTaskLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editTaskLabel"> *make this dynamic* e.g ProductType: Device Imei</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>    
+                    </div>
+                    <div id="editTaskMessage"> </div>
+                    <div class="modal-body">
+                        <form id="installation_Update_Form" enctype="multipart/form-data">
+                            <input type="hidden" id="installationId" name="installation_id">
+                            <input type="hidden" id="stageId" name="stage_id">
+                            <div class="mb-3">
+                                <label for="technician" class="form-label">Assigned Technician</label>
+                                <input type="text" class="form-control" id="technician" readonly>
+                            </div>
+    
+                            <div id="dynamicFields_tabletest"></div>
+                            <!-- Add other fields as needed -->
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" id="saveChanges">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    
+
+        <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <!-- Your other scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>  <!-- Required for Bootstrap -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>  <!-- Bootstrap JS -->
+    
+</body>
+</html>
