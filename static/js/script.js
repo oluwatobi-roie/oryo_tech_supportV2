@@ -89,7 +89,7 @@ document.querySelectorAll('.support-edit-btn').forEach(button => {
         // Get the data from the button's attributes
         const installationId = this.getAttribute('data-id');
         const productId = this.getAttribute('data-product_id');
-        const stageId = this.getAttribute('data-stage_id') ;
+        const stageId = +this.getAttribute('data-stage_id')+1 ;
         const productDescription = this.getAttribute('data-product');
         const technician = this.getAttribute('data-technician');
         const deviceImei = this.getAttribute('data-deviceImei');
@@ -118,11 +118,23 @@ document.querySelectorAll('.support-edit-btn').forEach(button => {
         }
 
         // Show the modal
-        const modal = new bootstrap.Modal(document.getElementById('editTask'), {focus:false});
+        const modal = new bootstrap.Modal(document.getElementById('editTask'), {focus:true});
         modal.show();
     });
 });
 
+
+// Handle button to view Profile on tech support page
+document.querySelectorAll('.support-edit-btn-verify').forEach(button =>{
+    button.addEventListener('click', function(){
+        const installationId = this.getAttribute('data-id')
+
+        // Update the modal title dynamically
+        const modalTitle = document.getElementById('installation-profile-heading');
+        modalTitle.textContent = "This is Installation Profile"
+    })
+
+})
 
 function validateFile(input) {
     const allowedExtensions = ["jpg", "jpeg", "png", "heif"];

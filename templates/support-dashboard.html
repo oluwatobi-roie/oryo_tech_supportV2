@@ -47,7 +47,7 @@
                         <td>{{ installation.stage.stage_name}}</td>
                         <td>
                             {% if installation.stage.stage_id == 4 %}
-                                <button class="btn btn-primary support-edit-btn" 
+                                <button class="btn btn-primary support-edit-btn-verify" 
                                 data-id="{{ installation.installation_id}}"
                                 data-product_id="{{ installation.product.product_id }}"
                                 data-stage_id="{{ installation.stage.stage_id }}"
@@ -64,7 +64,7 @@
                                         data-product="{{ installation.product.product_description }}"
                                         data-deviceImei = "{{ installation.device_imei}}"
                                         data-technician = "{{ installation.technician.f_name}} {{ installation.technician.l_name}}" >
-                                    Start {{ installation.stage.stage_name}}
+                                    Start {{ installation.stage.stage_next}}
                                 </button>
                             {% endif %}
                         </td>
@@ -80,22 +80,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
+                        <div id="editTaskMessage"> </div>
                         <h5 class="modal-title" id="editTaskLabel"> *make this dynamic* e.g ProductType: Device Imei</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>    
                     </div>
-                    <div id="editTaskMessage"> </div>
+                    
                     <div class="modal-body">
                         <form id="installation_Update_Form">
                             <input type="hidden" id="installationId" name="installation_id">
                             <input type="hidden" id="stageId" name="stage_id">
-                            <!-- <div class="mb-3">
-                                <label for="productDescription" class="form-label">Product Description</label>
-                                <input type="text" class="form-control" id="productDescription" readonly>
-                            </div> -->
-                            <!-- <div class="mb-3">
-                                <label for="deviceImei" class="form-label">Device Imei</label>
-                                <input type="text" class="form-control" id="deviceImei" readonly>
-                            </div> -->
                             <div class="mb-3">
                                 <label for="technician" class="form-label">Assigned Technician</label>
                                 <input type="text" class="form-control" id="technician" readonly>
@@ -114,8 +107,24 @@
             </div>
         </div>
     
-    
 
+        <!-- Modal Overlay for Viewing Profile -->
+
+        <div class = "modal fade" id="installation-profile" tabindex="-1" aria-labelledby="installation-profile-label">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="installation-profile-heading">
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+            
+        </div>
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
         <!-- Your other scripts -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>  <!-- Required for Bootstrap -->
