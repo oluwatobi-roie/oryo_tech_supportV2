@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, session, url_for, flash
+from flask import Blueprint, redirect, render_template, request, send_from_directory, session, url_for, flash
 from models.users_model import User
 from werkzeug.security import check_password_hash
 
@@ -56,3 +56,7 @@ def login():
 def logout():
     session.clear()
     return redirect(url_for('index.index'))
+
+@index_bp.route('/uploads/<path:filename>')
+def uploaded_file(filename):
+    return send_from_directory('uploads', filename)

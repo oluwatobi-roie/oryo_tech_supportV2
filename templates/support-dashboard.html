@@ -113,13 +113,30 @@
         <div class = "modal fade" id="installation-profile" tabindex="-1" aria-labelledby="installation-profile-label">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" id="installation-profile-heading">
+                    <div class="modal-header">
+                        <h4 id="installation-profile-heading"></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>   
                     </div>
                     <div class="modal-body">
+                        <h5>Vehicle Details</h5>
+                            <table class="table">
+                            <tbody id="vehicleDetailsTable"></tbody>
+                            </table>
 
-                    </div>
+                            <!-- Product Fields -->
+                            <h5>Installation Details</h5>
+                            <table class="table">
+                            <tbody id="productFieldsTable"></tbody>
+                            </table>
+
+                            <!-- Installation Images -->
+                            <h5>Installation Images</h5>
+                            <div id="installationImages" class="d-flex flex-wrap"></div>
+                        </div>
+                    
                     <div class="modal-footer">
-
+                        <button type="submit" class="btn btn-danger">Reject</button>
+                        <button type="submit" class="btn btn-primary" id="Approve">Approve</button>
                     </div>
                 </div>
             </div>

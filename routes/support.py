@@ -1,7 +1,7 @@
 # all activities around admin activities happens here
 import inspect
 import os
-from flask import Blueprint, json, jsonify, redirect, render_template, request, session, url_for, flash
+from flask import Blueprint, json, jsonify, redirect, render_template, request,  session, url_for, flash
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import selectinload
 from functools import wraps
@@ -14,8 +14,7 @@ from models.customer_model import Customer
 from models.stage_model import Stage
 from models import db
 from datetime import datetime
-from utils.gen_functions import convert_to_boolean
-from utils.gen_functions import save_uploaded_file
+from utils.gen_functions import save_uploaded_file, convert_to_boolean, all_field_types
 
 support_bp = Blueprint('support', __name__, template_folder='../templates', url_prefix='/support')
 
@@ -180,74 +179,28 @@ def get_product_fields(product_id,stage_id):
     product = Product.query.get(product_id)
     stage = Stage.query.get(stage_id)
 
+    if not product or not product.product_fields:
+        return jsonify({'fields' : []})
+        
+    fields = all_field_types()
+
+    # This is strictly for profile viewing, we naturally set profile to be 0 so as to target this funciton.
+    if stage_id == 0:
+        # Return all fields for this product type
+        all_product_fields = product.product_fields
+        edit_fields = {field: fields.get(field, "string") for field in all_product_fields}
+        return jsonify({'fields': edit_fields})
+    
+
     if product and product.product_fields and stage.stage_fields:
         try:
             product_fields = product.product_fields
             stage_fields = (stage.stage_fields)
-           
+        
 
-                        # Define expected field types
-            field_types = {
-                "installation_id": "number",
-                "product_id": "number",
-                "support_user_id": "number",
-                "technician_user_id": "number",
-                "start_date": "datetime-local",
-                "stage_id": "number",
-                "device_imei": "number",
-                "device_sim_serial": "number",
-                "device_sim_phone": "number",
-                "device_sim_seal": "number",
-                "device_password": "text",
-                "camera_imei": "number",
-                "camera_sim_serial": "number",
-                "camera_sim_phone": "number",
-                "camera_seal_number": "number",
-                "camera_password": "text",
-                "fuel_sensor_1_mac": "text",
-                "fuel_sensor_1_password": "text",
-                "fuel_sensor_2_mac": "text",
-                "fuel_sensor_2_password": "text",
-                "add_gps_online": "checkbox",
-                "location_check": "checkbox",
-                "ignition_check": "checkbox",
-                "external_battery": "checkbox",
-                "camera_check": "checkbox",
-                "fuel_1_check": "checkbox",
-                "fuel_2_check": "checkbox",
-                "plate_number": "text",
-                "nick_name": "text",
-                "driver_name": "text",
-                "tank_1_capacity": "number",
-                "tank_1_calibration_chart": "text",
-                "tank_1_seal_number": "text",
-                "tank_2_capacity": "number",
-                "tank_2_calibration_chart": "text",
-                "tank_2_seal_number": "text",
-                "gps_install_pics": "file",
-                "fuel_sensor_1_pics": "file",
-                "fuel_sensor_2_pics": "file",
-                "camera_install_pics": "file",
-                "installation_date": "datetime-local",
-                "pictures_confirmed": "checkbox",
-                "flespi_linkage": "checkbox",
-                "external_battery_alert": "checkbox",
-                "idling_detect": "checkbox",
-                "tank_1_current_volume": "number",
-                "tank_2_current_volume": "number",
-                "tank_1_drain_test_volume": "number",
-                "tank_2_drain_test_volume": "number",
-                "tank_1_refill_test_volume": "number",
-                "tank_2_refill_test_volume": "number",
-                "end_date": "datetime-local",
-                "approval": "checkbox"
-            }
+                # edit_fields = list(set(stage_fields) & set(product_fields))
+            edit_fields = {field: fields.get(field, "string") for field in set(stage_fields) & set(product_fields)}
 
-             # edit_fields = list(set(stage_fields) & set(product_fields))
-            edit_fields = {field: field_types.get(field, "string") for field in set(stage_fields) & set(product_fields)}
-
-
-            print(edit_fields)
             return jsonify({'fields': edit_fields})
         except Exception as e:
             return jsonify({'error': str(e)})
@@ -255,3 +208,22 @@ def get_product_fields(product_id,stage_id):
     return jsonify({'fields': []})  # Return empty if no fields found
 
 
+
+
+# this helps display an installation profile, we are 
+@support_bp.route('/installation-profile/<int:installation_id>', methods=['GET'])
+@login_required
+def profile(installation_id):
+    installation = Installation.query.get(installation_id)
+
+    if not installation:
+        return jsonify({"error": "Installation not found"}), 404
+
+
+    product = installation.product_id
+    get_product_fields(product, 0)
+    product_fields_response = get_product_fields(product, 0)
+    product_fields = product_fields_response.get_json().get("fields", {})
+    product_data = {field: getattr(installation, field, "N/A") for field in product_fields.keys()}
+
+    return jsonify(product_data)

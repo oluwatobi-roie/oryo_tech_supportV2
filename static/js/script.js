@@ -105,7 +105,6 @@ document.querySelectorAll('.support-edit-btn').forEach(button => {
         modalTitle.textContent = `${productDescription}: ${deviceImei} Task ID: ${installationId} `;
 
         if(installationId){
-            console.log(deviceImei)
             fetch(`/support/addtask/get_product_fields/${productId}/${stageId}`)
             .then(response => response.json())
 
@@ -125,16 +124,73 @@ document.querySelectorAll('.support-edit-btn').forEach(button => {
 
 
 // Handle button to view Profile on tech support page
-document.querySelectorAll('.support-edit-btn-verify').forEach(button =>{
-    button.addEventListener('click', function(){
-        const installationId = this.getAttribute('data-id')
+// Handle button to view Profile on tech support page
+document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
+    button.addEventListener('click', function () {
+        const installationId = this.getAttribute('data-id');
 
         // Update the modal title dynamically
         const modalTitle = document.getElementById('installation-profile-heading');
-        modalTitle.textContent = "This is Installation Profile"
-    })
+        modalTitle.textContent = "Installation Profile";
 
-})
+        if (installationId) {
+            fetch(`/support/installation-profile/${installationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // Debugging: View received data in console
+
+                    let vehicleFields = ["plate_number", "nick_name", "driver_name", "installation_date"];
+                    let vehicleDetailsHtml = "";
+                    let productDetailsHtml = "";
+                    let imagesHtml = "";
+
+                    // Populate Vehicle Details
+                    vehicleFields.forEach(field => {
+                        if (data[field]) {
+                            vehicleDetailsHtml += `<tr><th>${formatLabel(field)}:</th><td>${data[field]}</td></tr>`;
+                        }
+                    });
+                    document.getElementById("vehicleDetailsTable").innerHTML = vehicleDetailsHtml;
+
+                    // Populate Dynamic Product Fields
+                    for (let field in data) {
+                        if (!vehicleFields.includes(field)) {
+                            if (field.includes("_pics")) {
+                                // Handle image fields
+                                let imageUrl = data[field];
+                                if (imageUrl) {
+                                    imagesHtml += `<img src="${imageUrl}" class="img-thumbnail m-2" style="width:150px; height:150px;">`;
+                                }
+                            } else if (typeof data[field] === "boolean") {
+                                // Display boolean values as Yes/No
+                                productDetailsHtml += `<tr><th>${formatLabel(field)}:</th><td>${data[field] ? "Yes" : "No"}</td></tr>`;
+                            } else {
+                                // Regular text fields
+                                productDetailsHtml += `<tr><th>${formatLabel(field)}:</th><td>${data[field] || "N/A"}</td></tr>`;
+                            }
+                        }
+                    }
+
+                    document.getElementById("productFieldsTable").innerHTML = productDetailsHtml;
+                    document.getElementById("installationImages").innerHTML = imagesHtml || "<p>No images available</p>";
+
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('installation-profile'), { focus: true });
+                    modal.show();
+                })
+                .catch(error => {
+                    console.error("Error fetching profile:", error);
+                    alert("Failed to load profile data.");
+                });
+        }
+    });
+});
+
+// Format field names to readable text (e.g., "device_sim_serial" → "Device Sim Serial")
+function formatLabel(field) {
+    return field.replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase());
+}
+
 
 function validateFile(input) {
     const allowedExtensions = ["jpg", "jpeg", "png", "heif"];
