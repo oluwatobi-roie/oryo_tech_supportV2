@@ -166,29 +166,7 @@ def addTask():
 
             db.session.commit()
             return jsonify({"message": my_message}), 201
-    
-        
-        # Put request version 2
-    #     if request.method == 'PUT':
 
-    #         # UPLOAD_FOLDER = "uploads"
-    #         # os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure upload directory exists
-    #          # Handle JSON data (form fields without files)
-    #         data = request.form.to_dict()
-
-    #         # Handle file uploads
-    #         uploaded_files = {}
-    #         for key, file in request.files.items():
-    #             if file and file.filename:  # Ensure file is not empty
-    #                 uploaded_files[key] = save_uploaded_file(file)
-    #         # Debugging output
-    #         print("Files received:", uploaded_files)
-    #         print("Data received:", data)
-
-    #         # Merge file paths with data
-    #         data.update(uploaded_files)
-    #         return jsonify({"message": "Task Updated successfully", "data": data}), 200
-    
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
