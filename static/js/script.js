@@ -125,6 +125,7 @@ document.querySelectorAll('.support-edit-btn').forEach(button => {
 
 // Handle button to view Profile on tech support page
 // Handle button to view Profile on tech support page
+// Handle button to view Profile on tech support page
 document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
     button.addEventListener('click', function () {
         const installationId = this.getAttribute('data-id');
@@ -159,7 +160,11 @@ document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
                                 // Handle image fields
                                 let imageUrl = data[field];
                                 if (imageUrl) {
-                                    imagesHtml += `<img src="${imageUrl}" class="img-thumbnail m-2" style="width:150px; height:150px;">`;
+                                    imagesHtml += `
+                                        <a href="#" class="view-image" data-image="${imageUrl}">
+                                            <img src="${imageUrl}" class="img-thumbnail m-2" style="width:150px; height:150px;">
+                                        </a>
+                                    `;
                                 }
                             } else if (typeof data[field] === "boolean") {
                                 // Display boolean values as Yes/No
@@ -183,8 +188,46 @@ document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
                     alert("Failed to load profile data.");
                 });
         }
+
+        // Approve Installation
+        document.getElementById("approve_installation").addEventListener("click", function () {
+            console.log(installationId)
+            if (!installationId) {
+                alert("No installation selected.");
+                return;
+            }
+            fetch(`/support/approve-installation/${installationId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "approved" })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Installation approved successfully.");
+                location.reload(); // Refresh page or update UI accordingly
+            })
+            .catch(error => {
+                console.error("Error approving installation:", error);
+                alert("Failed to approve installation.");
+            });
+        });
+        // Approve Istallation Ends
     });
 });
+
+
+
+// Handle image click to open in a larger view
+document.addEventListener('click', function (event) {
+    if (event.target.closest('.view-image')) {
+        event.preventDefault();
+        let imageUrl = event.target.closest('.view-image').getAttribute('data-image');
+        document.getElementById("largeImage").src = imageUrl;
+        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        imageModal.show();
+    }
+});
+
 
 // Format field names to readable text (e.g., "device_sim_serial" → "Device Sim Serial")
 function formatLabel(field) {
@@ -266,6 +309,8 @@ document.getElementById("installation_Update_Form").addEventListener("submit", f
 
     });
 });
+
+
 
 
 

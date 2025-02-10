@@ -47,13 +47,7 @@
                         <td>{{ installation.stage.stage_name}}</td>
                         <td>
                             {% if installation.stage.stage_id == 4 %}
-                                <button class="btn btn-primary support-edit-btn-verify" 
-                                data-id="{{ installation.installation_id}}"
-                                data-product_id="{{ installation.product.product_id }}"
-                                data-stage_id="{{ installation.stage.stage_id }}"
-                                data-product="{{ installation.product.product_description }}"
-                                data-deviceImei = "{{ installation.device_imei}}"
-                                data-technician = "{{ installation.technician.f_name}} {{ installation.technician.l_name}}" >
+                                <button class="btn btn-primary support-edit-btn-verify"  data-id="{{ installation.installation_id}}">
                             View Profile
                                 </button>
                             {% elif installation.stage.stage_id != 4 %}
@@ -74,6 +68,9 @@
             </tbody>
         </table>
 
+
+
+   
 
         <!-- Modal Overlay for updating Task-->
         <div class="modal fade" id="editTask" tabindex="-1" aria-labelledby="editTaskLabel">
@@ -108,8 +105,9 @@
         </div>
     
 
-        <!-- Modal Overlay for Viewing Profile -->
 
+        <!-- Modal class -->
+        <!-- Modal Overlay for Viewing Profile -->
         <div class = "modal fade" id="installation-profile" tabindex="-1" aria-labelledby="installation-profile-label">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -135,13 +133,35 @@
                         </div>
                     
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-danger">Reject</button>
-                        <button type="submit" class="btn btn-primary" id="Approve">Approve</button>
+                        <button type="submit" class="btn btn-danger" id="reject_installation">Reject</button>
+                        <button type="submit" class="btn btn-primary" id="approve_installation">Approve</button>
                     </div>
                 </div>
             </div>
-            
         </div>
+
+
+
+        <!-- Modal Class -->
+        <!-- Image view modal class -->
+         <!-- Image View Modal -->
+        <!-- <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">View Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="largeImage" src="" class="img-fluid" style="max-width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+
+
         <script src="{{ url_for('static', filename='js/script.js') }}"></script>
         <!-- Your other scripts -->
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>  <!-- Required for Bootstrap -->

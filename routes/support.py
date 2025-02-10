@@ -227,3 +227,21 @@ def profile(installation_id):
     product_data = {field: getattr(installation, field, "N/A") for field in product_fields.keys()}
 
     return jsonify(product_data)
+
+
+
+
+
+@support_bp.route('/approve-installation/<int:installation_id>', methods=['POST'])
+@login_required
+def approve_installation(installation_id):
+    print("installation ID: ", installation_id)
+    return jsonify("Installation Approved")
+
+
+
+
+
+def reject_installation():
+
+    return("Installation rejected")
