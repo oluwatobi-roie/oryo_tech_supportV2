@@ -13,34 +13,29 @@
     <div class="header">
         <img src="{{ url_for('static', filename='images/oryo_logo.png') }}" alt="Logo" class="logo">
     </div>
-    <h1>Support Dashboard</h1>
+    <h1>Support Dashboard - Sim Verification</h1>
 
-          <!-- Logout Button -->
-    <form action="/logout" method="POST">
-        <button type="submit">Logout</button>
-    </form>
 
-    <!-- sim Audit -->
-    <form action="/support/sim-audit" method="GET">
-        <button type="submit">Sim Audit</button>
-    </form>
 
     <!-- Add Task Button -->
     <form action="{{ url_for('support.addTask') }}">
         <button type="submit" onclick="addTaskProductDisplay()">Add task</button>
     </form>
+
+
     <div id="message" class="mt-3 text-center"></div>
 
         <!-- Display All Active Task for Tech Support -->
-        <h3 class="mt-5 text-center">Active Tasks</h3>
+        <h3 class="mt-5 text-center">Verification Summary</h3>
         <table class="table table-striped mt-3">
             <thead>
                 <tr>
-                    <th>Project Description</th>
-                    <th>Product Name</th>
-                    <th>Assigned Technician</th>
-                    <th>Current Status</th>
-                    <th>Next Stage</th>
+                    <th>Location</th>
+                    <th>Site Engineer</th>
+                    <th>Total vehicles</th>
+                    <th>Total Completed</th>
+                    <th>% Completed</th>
+                    
                 </tr>
             </thead>
             <tbody id="taskList">
@@ -73,9 +68,7 @@
             </tbody>
         </table>
 
-
-
-   
+        
 
         <!-- Modal Overlay for updating Task-->
         <div class="modal fade" id="editTask" tabindex="-1" aria-labelledby="editTaskLabel">

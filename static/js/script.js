@@ -187,7 +187,6 @@ document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
                     console.error("Error fetching profile:", error);
                     alert("Failed to load profile data.");
                 });
-        }
 
         // Approve Installation
         document.getElementById("approve_installation").addEventListener("click", function () {
@@ -212,21 +211,13 @@ document.querySelectorAll('.support-edit-btn-verify').forEach(button => {
             });
         });
         // Approve Istallation Ends
+    }
     });
 });
 
 
 
-// Handle image click to open in a larger view
-document.addEventListener('click', function (event) {
-    if (event.target.closest('.view-image')) {
-        event.preventDefault();
-        let imageUrl = event.target.closest('.view-image').getAttribute('data-image');
-        document.getElementById("largeImage").src = imageUrl;
-        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-        imageModal.show();
-    }
-});
+
 
 
 // Format field names to readable text (e.g., "device_sim_serial" → "Device Sim Serial")
@@ -257,7 +248,17 @@ document.getElementById("installation_Update_Form").addEventListener("change", f
 });
 
 
-
+// Open Image model class starts here
+document.addEventListener('click', function (event) {
+    if (event.target.closest('.view-image')) {
+        event.preventDefault();
+        let imageUrl = event.target.closest('.view-image').getAttribute('data-image');
+        document.getElementById("largeImage").src = imageUrl;
+        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        imageModal.show();
+    }
+});
+// Open image model class ends here
 
 
 // // Submitting update task button

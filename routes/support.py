@@ -235,8 +235,17 @@ def profile(installation_id):
 @support_bp.route('/approve-installation/<int:installation_id>', methods=['POST'])
 @login_required
 def approve_installation(installation_id):
+    installation = Installation.query.get(installation_id)
+    if not installation:
+        return jsonify({"error ": "Installation not found"}), 404
+    
+    product = installation.product_id
+    validation_data = get_product_fields(product, 5)
+    validation_fields = validation_data.get_json().get("fields", {})
+    print (validation_fields)
     print("installation ID: ", installation_id)
     return jsonify("Installation Approved")
+
 
 
 
@@ -245,3 +254,17 @@ def approve_installation(installation_id):
 def reject_installation():
 
     return("Installation rejected")
+
+
+
+
+@support_bp.route('/sim-audit', methods=['GET'])
+@login_required
+def simAudit():
+    try:
+        if request.method == 'GET':
+            installations = Installation.query.filter(Installation.stage_id.in_([1, 2, 4])).all()
+            return render_template('sim_verification.html', installations = installations)
+        
+    except Exception as e:
+        return redirect(url_for(logout))

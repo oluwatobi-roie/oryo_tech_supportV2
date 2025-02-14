@@ -20,10 +20,6 @@
         <button type="submit">Logout</button>
     </form>
 
-    <!-- Add Task Button -->
-    <!-- <form action="{{ url_for('support.addTask') }}">
-        <button type="submit" onclick="addTaskProductDisplay()">Add task</button>
-    </form> -->
 
     <form">
         <button type="submit" >Log an Issue</button>
@@ -52,7 +48,7 @@
                             <button class="btn btn-info support-edit-btn" 
                                     data-id="{{ installation.installation_id}}"
                                     data-product_id="{{ installation.product.product_id }}"
-                                    data-stage_id="{{ installation.stage.stage_id }}"
+                                    data-stage_id="{{ installation.stage.stage_id - 1 }}"
                                     data-product="{{ installation.product.product_description }}"
                                     data-deviceImei = "{{ installation.device_imei}}"
                                     data-technician = "{{ installation.technician.f_name}} {{ installation.technician.l_name}}" >
